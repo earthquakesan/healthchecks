@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  healthchecks:
+    image: healthchecks:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_ROOT: "http://localhost"
+      SITE_NAME: "My Monitoring Website"
+      DEFAULT_FROM_EMAIL: "email@example.com"
+      REGISTRATION_OPEN: "False"
+      DEBUG: "False"
+      SECRET_KEY: "LCxihc3fVmBfgWNBEnKBMgQHXpVvTxPtrmttqScCyhYxLjXeYGuXcUAn6W5EzwwKk5fNWedRUxLmQMXB3bocMefq4yuHXLUxCNFtnwzReUvac28rFxtdBwjQ2crBSL8q"
+      # Mail configuration
+      EMAIL_HOST: "gmail.com"
+      EMAIL_HOST_USER: "username"
+      EMAIL_HOST_PASSWORD: "password"
+      # DB connection
+      DB: "postgres"
+      DB_HOST: "postgresql"
+      DB_PORT: "5432"
+      DB_NAME: "healthchecks"
+      DB_USER: "healthchecks"
+      DB_PASSWORD: "password"
+  postgresql:
+    image: postgres:12.3-alpine
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "healthchecks"
+      POSTGRES_DB: "healthchecks"
