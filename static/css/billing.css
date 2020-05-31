@@ -37,6 +37,14 @@
     border-color: #0091EA;
 }
 
+#payment-method-modal .modal-header {
+    border-bottom: 0;
+}
+
+#payment-method-modal .modal-footer {
+    border-top: 0;
+}
+
 .plan .marker {
     display: none;
 }
