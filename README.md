@@ -423,3 +423,12 @@ in production.
   * Make sure the TLS certificates are secured well and are getting refreshed regularly
   * Have monitoring in place to be sure the Healthchecks instance itself is operational
     (is accepting pings, is sending out alerts, is not running out of resources).
+
+### Using Docker Image
+
+```
+docker build -t healthchecks .
+docker-compose up -d
+docker ps
+docker exec -it healtchecks_container createsuperuser.sh
+```

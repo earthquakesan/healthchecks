@@ -1,22 +1,22 @@
 version: "3"
 
+# check this: http://pawamoy.github.io/2018/02/01/docker-compose-django-postgres-nginx.html
+
 services:
   healthchecks:
     image: healthchecks:latest
-    ports:
-      - "80:80"
-      - "443:443"
+    restart: always
     environment:
       SITE_ROOT: "http://localhost"
       SITE_NAME: "My Monitoring Website"
-      DEFAULT_FROM_EMAIL: "email@example.com"
       REGISTRATION_OPEN: "False"
       DEBUG: "False"
       SECRET_KEY: "LCxihc3fVmBfgWNBEnKBMgQHXpVvTxPtrmttqScCyhYxLjXeYGuXcUAn6W5EzwwKk5fNWedRUxLmQMXB3bocMefq4yuHXLUxCNFtnwzReUvac28rFxtdBwjQ2crBSL8q"
       # Mail configuration
-      EMAIL_HOST: "gmail.com"
-      EMAIL_HOST_USER: "username"
-      EMAIL_HOST_PASSWORD: "password"
+      EMAIL_HOST: "exchange.example.com"
+      EMAIL_HOST_USER: "username@example.com"
+      DEFAULT_FROM_EMAIL: "username@example.com"
+      EMAIL_HOST_PASSWORD: "secret_password"
       # DB connection
       DB: "postgres"
       DB_HOST: "postgresql"
@@ -24,9 +24,31 @@ services:
       DB_NAME: "healthchecks"
       DB_USER: "healthchecks"
       DB_PASSWORD: "password"
+    volumes:
+      - static-files:/opt/healthchecks/static-collected
   postgresql:
     image: postgres:12.3-alpine
+    restart: always
     environment:
       POSTGRES_PASSWORD: "password"
       POSTGRES_USER: "healthchecks"
       POSTGRES_DB: "healthchecks"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  httpd:
+    image: httpd:2.4.43
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${PWD}/docker/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - static-files:/usr/local/apache2/htdocs/static
+    environment:
+      SERVER_ADMIN_EMAIL: "administration@example.com"
+      PROXY_PROTOCOL: "http"
+      PROXY_HOST: "healthchecks"
+
+volumes:
+  static-files:
+  pgdata:
